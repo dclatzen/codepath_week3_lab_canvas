@@ -38,12 +38,11 @@ class CanvasViewController: UIViewController {
             var velocity = sender.velocity(in: view)
             
             if velocity.y > 0 {
-                UIView.animate(withDuration: 0.2, animations: {
+                UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, options: [], animations: { () -> Void in
                     self.trayView.center = self.trayDown
                 })
             } else {
-                UIView.animate(withDuration: 0.2, animations: { 
-                    self.trayView.center = self.trayUp
+                UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, options: [], animations: { () -> Void in                    self.trayView.center = self.trayUp
                     print ("Tray moved up")
                 })
             }
