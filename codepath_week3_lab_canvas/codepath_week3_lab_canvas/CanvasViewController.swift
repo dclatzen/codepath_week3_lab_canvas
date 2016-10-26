@@ -72,6 +72,13 @@ class CanvasViewController: UIViewController {
             // imageView now refers to the face that you panned on.
             newlyCreatedFace = UIImageView(image: imageView.image)
             
+            // instantiate a pan gesture recognizer
+            let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPanNewFace(sender:)))
+            
+            newlyCreatedFace.isUserInteractionEnabled = true
+            newlyCreatedFace.addGestureRecognizer(panGestureRecognizer)
+            
+            
             // simulate picking up
             UIView.animate(withDuration: 0.1, animations: {
                 self.newlyCreatedFace.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
@@ -104,9 +111,34 @@ class CanvasViewController: UIViewController {
         }
     }
     
-    
-    
-    
+    func didPanNewFace(sender: UIPanGestureRecognizer) {
+        
+        let translation = sender.translation(in: view)
+        
+        if sender.state == .began {
+            
+            // get the face that we panned on
+            newlyCreatedFace = sender.view as! UIImageView
+            
+            // simulate picking up
+            UIView.animate(withDuration: 0.1, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 3, options: [], animations: {
+                self.newlyCreatedFace.transform = CGAffineTransform(scaleX: 1.6, y: 1.6)
+            })
+            
+            // so we can offset by translation later
+            newlyCreatedFaceOriginalCenter = newlyCreatedFace.center
+            
+        } else if sender.state == .changed {
+            
+            // pan the face around
+            newlyCreatedFace.center = CGPoint(x: newlyCreatedFaceOriginalCenter.x + translation.x, y: newlyCreatedFaceOriginalCenter.y + translation.y)
+            
+        } else if sender.state == .ended {
+            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, options: [], animations: {
+                self.newlyCreatedFace.transform = CGAffineTransform(scaleX: 1, y: 1)
+            })
+        }
+    }
     
     
     
